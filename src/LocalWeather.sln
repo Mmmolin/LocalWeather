@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalWeather", "LocalWeather\LocalWeather.csproj", "{CA1F37B2-DDF8-42C2-A482-6985D594B182}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocalWeather", "LocalWeather\LocalWeather.csproj", "{CA1F37B2-DDF8-42C2-A482-6985D594B182}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocalWeather.Data", "LocalWeather.Data\LocalWeather.Data.csproj", "{4E14D74D-AB4B-4729-B11E-B5C944212733}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalWeather.Domain", "LocalWeather.Domain\LocalWeather.Domain.csproj", "{190FC4B4-71B6-4078-8155-AC19D1A24BC8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{CA1F37B2-DDF8-42C2-A482-6985D594B182}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA1F37B2-DDF8-42C2-A482-6985D594B182}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA1F37B2-DDF8-42C2-A482-6985D594B182}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E14D74D-AB4B-4729-B11E-B5C944212733}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E14D74D-AB4B-4729-B11E-B5C944212733}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E14D74D-AB4B-4729-B11E-B5C944212733}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E14D74D-AB4B-4729-B11E-B5C944212733}.Release|Any CPU.Build.0 = Release|Any CPU
+		{190FC4B4-71B6-4078-8155-AC19D1A24BC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{190FC4B4-71B6-4078-8155-AC19D1A24BC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{190FC4B4-71B6-4078-8155-AC19D1A24BC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{190FC4B4-71B6-4078-8155-AC19D1A24BC8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,9 +4,8 @@ using System.Text;
 
 namespace LocalWeather.Domain
 {
-    public class Parameter
+    public class Value
     {
-        public string Name { get; set; }
-        public decimal[] Values { get; set; }
+        public decimal Val { get; set; }
     }
 }

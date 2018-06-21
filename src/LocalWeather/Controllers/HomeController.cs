@@ -18,7 +18,7 @@ namespace LocalWeather.Controllers
             var smhi = new LocalWeather.Data.SmhiClient();
             var response = smhi.GetForecastAsync();
             Forecast test = response.Result;
-            return View(response);
+            return View(test);
         }
 
         public IActionResult About()

@@ -7,10 +7,24 @@
     var precipitationMedian = Model.TimeSeries[0].Parameters[5].Values[0];
     var precipitationCategory = Model.TimeSeries[0].Parameters[1].Values[0];
     var smhiClient = new LocalWeather.Data.SmhiClient();
-
 }
+<table class="weatherData">
+    <tr class="category">
+        <td>Forecast</td>
+        <td>Temperature</td>
+        <td>Wind</td>
+        <td>Direction</td>
+    </tr>
+    <tr class="data">
+        <td>@smhiClient.ConvertWsymb2Async(weatherCategory)</td>
+        <td>@temperature</td>
+        <td>@wind m/s</td>
+        <td>@windDirection</td>
+    </tr>
+</table>
 
-<h1>@smhiClient.ConvertWsymb2Async(weatherCategory)</h1>
+
+
 
 
 

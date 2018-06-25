@@ -21,7 +21,7 @@ namespace LocalWeather.Data
         static Dictionary<int, string> PrecipitationCategory = new Dictionary<int, string>()
         {
             {0, "No precipitation"},{1, "Snow" },{2, "Snow and rain" },{3, "Rain" },{4, "Drizzle" },{5, "Freezing rain" },{6, "Freezing drizzle" }
-        };
+        };      
 
 
         public async Task<Forecast> GetForecastAsync()
@@ -44,5 +44,12 @@ namespace LocalWeather.Data
             var precipitationCategory = PrecipitationCategory.GetValueOrDefault(pcat);
             return precipitationCategory;
         }
+
+        public string ConvertWindDegreeAsync(int degree)
+        {
+            string[] direction = new string[] { "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW" };
+            return null;
+        }
+        
     }
 }

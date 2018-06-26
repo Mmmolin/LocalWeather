@@ -2,12 +2,13 @@
 @{ 
     var temperature = Model.TimeSeries[0].Parameters[11].Values[0];
     var wind = Model.TimeSeries[0].Parameters[14].Values[0];
-    var windDirection = Model.TimeSeries[0].Parameters[13].Values[0];
+    var windDirection = (int)Model.TimeSeries[0].Parameters[13].Values[0];
     var weatherCategory = Decimal.ToInt32(Model.TimeSeries[0].Parameters[18].Values[0]);
     var precipitationMedian = Model.TimeSeries[0].Parameters[5].Values[0];
     var precipitationCategory = Model.TimeSeries[0].Parameters[1].Values[0];
     var smhiClient = new LocalWeather.Data.SmhiClient();
 }
+
 <table class="weatherData">
     <tr class="category">
         <td>Forecast</td>
@@ -17,9 +18,9 @@
     </tr>
     <tr class="data">
         <td>@smhiClient.ConvertWsymb2Async(weatherCategory)</td>
-        <td>@temperature</td>
+        <td>@temperature °C</td>
         <td>@wind m/s</td>
-        <td>@windDirection</td>
+        <td>@smhiClient.ConvertWindDegreeAsync(windDirection)</td>
     </tr>
 </table>
 

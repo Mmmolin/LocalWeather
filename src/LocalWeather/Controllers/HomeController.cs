@@ -15,10 +15,10 @@ namespace LocalWeather.Controllers
     {
         public IActionResult Index()
         {
-            var smhi = new LocalWeather.Data.SmhiClient();
-            var response = smhi.GetForecastAsync();
-            Forecast test = response.Result;
-            return View(test);
+            var weatherData = new LocalWeather.Data.WeatherData();
+            var weatherAsync = weatherData.CreateWeatherData();
+            var weather = weatherAsync.Result;
+            return View(weather);
         }        
 
         public IActionResult Error()

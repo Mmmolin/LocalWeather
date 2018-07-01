@@ -1,26 +1,42 @@
-﻿@model LocalWeather.Domain.Forecast
+﻿@model LocalWeather.Domain.Weather
 @{ 
-    var temperature = Model.TimeSeries[0].Parameters[11].Values[0];
-    var wind = Model.TimeSeries[0].Parameters[14].Values[0];
-    var windDirection = (int)Model.TimeSeries[0].Parameters[13].Values[0];
-    var weatherCategory = Decimal.ToInt32(Model.TimeSeries[0].Parameters[18].Values[0]);
-    var precipitationMedian = Model.TimeSeries[0].Parameters[5].Values[0];
-    var precipitationCategory = Model.TimeSeries[0].Parameters[1].Values[0];
-    var smhiClient = new LocalWeather.Data.SmhiClient();
-}
+    var validTime = Model.ValidTime;
+    var temperature = Model.Temperature;
+    var wind = Model.Wind;
+    var windDirection = Model.WindDirection;
+    var weatherCategory = Model.WeatherCategory;
+    var precipitationMedian = Model.PrecipitationMedian;
+    var precipitationCategory = Model.PrecipitationCategory;
+
+    var day = String.Empty;
+    if (validTime.Date == DateTime.Now.Date)
+    {
+        day = "Today";
+    }
+    else if (validTime.Date == DateTime.Now.AddDays(1))
+    {
+        day = "Tomorrow";
+    }
+    else if (validTime.Date == DateTime.Now.AddDays(2))
+    {
+        day = validTime.DayOfWeek.ToString();
+    }
+
+    }
 
 <table class="weatherData">
     <tr class="category">
+        <td rowspan="2">@day</td>
         <td>Forecast</td>
         <td>Temperature</td>
         <td>Wind</td>
         <td>Direction</td>
     </tr>
     <tr class="data">
-        <td>@smhiClient.ConvertWsymb2Async(weatherCategory)</td>
+        <td>@weatherCategory</td>
         <td>@temperature °C</td>
         <td>@wind m/s</td>
-        <td>@smhiClient.ConvertWindDegreeAsync(windDirection)</td>
+        <td>@windDirection</td>
     </tr>
 </table>
 

@@ -38,6 +38,7 @@
 .weatherData {
     border-spacing: 15px 0px; 
     border-collapse: separate;
+    margin: auto; 
 }
 
 .category {
@@ -47,4 +48,9 @@
 
 .data {
     text-align: center;
+}
+
+.date {
+    font-weight:normal;
+    font-style:italic;
 }

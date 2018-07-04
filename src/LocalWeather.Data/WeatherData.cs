@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,10 +32,34 @@ namespace LocalWeather.Data
             var response = await client.GetForecastAsync();
             var forecast = response;
 
+
             var validTimeUtc = forecast.TimeSeries[0].ValidTime;
-            var wsymb2 = Decimal.ToInt32(forecast.TimeSeries[0].Parameters[18].Values[0]);
-            var windDegree = (int)forecast.TimeSeries[0].Parameters[3].Values[0];
-            var precipitationCategory = Decimal.ToInt32(forecast.TimeSeries[0].Parameters[15].Values[0]);
+
+            var forecastTimes = new int[3];
+            forecastTimes[0] = 0;
+            forecastTimes[1] = forecast.TimeSeries
+                .IndexOf(forecast.TimeSeries.FirstOrDefault(vt => vt.ValidTime.Day == validTimeUtc.AddDays(1).Day
+                && vt.ValidTime.Hour == 13));
+            forecastTimes[2] = forecast.TimeSeries
+                .IndexOf(forecast.TimeSeries.FirstOrDefault(vt => vt.ValidTime.Day == validTimeUtc.AddDays(2).Day
+                && vt.ValidTime.Hour == 13));
+            //array.IndexOf(parameterArray(condition))
+             
+            
+
+            // Make a method out of this, Generics? Interface?
+            var wsymb2 = Decimal.ToInt32(forecast.TimeSeries[0].Parameters
+                .Where(p => p.Name == "Wsymb2").Select(ws => ws.Values[0]).FirstOrDefault());
+            var temperature = forecast.TimeSeries[0].Parameters
+                .Where(p => p.Name == "t").Select(t => t.Values[0]).FirstOrDefault();
+            var wind = forecast.TimeSeries[0].Parameters
+                .Where(p => p.Name == "ws").Select(ws => ws.Values[0]).FirstOrDefault();
+            var windDegree = (int)forecast.TimeSeries[0].Parameters
+                .Where(p => p.Name == "wd").Select(wd => wd.Values[0]).FirstOrDefault();
+            var precipitationMedian = forecast.TimeSeries[0].Parameters
+                .Where(p => p.Name == "pmedian").Select(pm => pm.Values[0]).FirstOrDefault();
+            var precipitationCategory = Decimal.ToInt32(forecast.TimeSeries[0].Parameters
+                .Where(p => p.Name == "pcat").Select(pc => pc.Values[0]).FirstOrDefault());
 
             string cardinal = string.Empty;
             if (windDegree >= 338 && windDegree <= 22) { cardinal = "N"; }
@@ -51,14 +76,16 @@ namespace LocalWeather.Data
 
             weather.ValidTime = validTimeUtc.AddHours(1);
             weather.WeatherCategory = WeatherCategory.GetValueOrDefault(wsymb2);
-            weather.Temperature = forecast.TimeSeries[0].Parameters[1].Values[0];
-            weather.Wind = forecast.TimeSeries[0].Parameters[4].Values[0];
+            weather.Temperature = temperature;
+            weather.Wind = wind;
             weather.WindDirection = cardinal;
-            weather.PrecipitationMedian = forecast.TimeSeries[0].Parameters[17].Values[0];
+            weather.PrecipitationMedian = precipitationMedian;
             weather.PrecipitationCategory = PrecipitationCategory.GetValueOrDefault(precipitationCategory);
 
             return weather;
         }
+
+        
         
     }
 }

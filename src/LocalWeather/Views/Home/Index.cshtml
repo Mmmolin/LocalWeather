@@ -1,45 +1,36 @@
-﻿@model LocalWeather.Domain.Weather
-@{ 
-    var validTime = Model.ValidTime;
-    var temperature = Model.Temperature;
-    var wind = Model.Wind;
-    var windDirection = Model.WindDirection;
-    var weatherCategory = Model.WeatherCategory;
-    var precipitationMedian = Model.PrecipitationMedian;
-    var precipitationCategory = Model.PrecipitationCategory;
-
-    var day = String.Empty;
-    if (validTime.Date == DateTime.Now.Date)
+﻿@model LocalWeather.Domain.WeatherForecast
+@{
+    
+    foreach (var forecast in Model.Forecast)
     {
-        day = "Today";
-    }
-    else if (validTime.Date == DateTime.Now.AddDays(1))
-    {
-        day = "Tomorrow";
-    }
-    else if (validTime.Date == DateTime.Now.AddDays(2))
-    {
-        day = validTime.DayOfWeek.ToString();
-    }
+        var day = String.Empty;
+        if (forecast.ValidTime.ToShortDateString() == DateTime.Now.ToShortDateString())
+        {
+            day = "Today";
+        }
+        else if (forecast.ValidTime.ToShortDateString() == DateTime.Now.AddDays(1).ToShortDateString())
+        {
+            day = "Tomorrow";
+        }
 
+
+    <table class="weatherData">
+        <tr class="category">
+            <td rowspan="2">@day</td>
+            <td>Forecast</td>
+            <td>Temperature</td>
+            <td>Wind</td>
+            <td>Direction</td>
+        </tr>
+        <tr class="data">
+            <td>@forecast.WeatherCategory</td>
+            <td>@forecast.Temperature °C</td>
+            <td>@forecast.Wind m/s</td>
+            <td>@forecast.WindDirection</td>
+        </tr>
+    </table>
     }
-
-<table class="weatherData">
-    <tr class="category">
-        <td rowspan="2">@day</td>
-        <td>Forecast</td>
-        <td>Temperature</td>
-        <td>Wind</td>
-        <td>Direction</td>
-    </tr>
-    <tr class="data">
-        <td>@weatherCategory</td>
-        <td>@temperature °C</td>
-        <td>@wind m/s</td>
-        <td>@windDirection</td>
-    </tr>
-</table>
-
+}
 
 
 

@@ -16,9 +16,10 @@ namespace LocalWeather.Controllers
         public IActionResult Index()
         {
             var weatherData = new LocalWeather.Data.WeatherData();
-            var weatherAsync = weatherData.CreateWeatherData();
-            var weather = weatherAsync.Result;
-            return View(weather);
+            var weatherAsync = weatherData.CreateWeatherForecast();
+            var weatherForecast = new WeatherForecast();
+            weatherForecast = weatherAsync.Result;
+            return View(weatherForecast);
         }        
 
         public IActionResult Error()

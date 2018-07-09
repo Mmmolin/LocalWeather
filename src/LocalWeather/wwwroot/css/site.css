@@ -36,9 +36,14 @@
 }
 
 .weatherData {
+    table-layout: fixed;
+    width: 50%;
     border-spacing: 15px 0px; 
     border-collapse: separate;
-    margin: auto; 
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 18px;
+    background-color: lightblue;
 }
 
 .category {

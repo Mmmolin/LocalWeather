@@ -28,26 +28,15 @@ namespace LocalWeather.Data
         public async Task<WeatherForecast> CreateWeatherForecast()
         {
             SmhiClient client = new SmhiClient();            
-            WeatherForecast weatherForecast = new WeatherForecast();
             var response = await client.GetForecastAsync();
             var forecast = response;
-
-            var validTimeNow = forecast.TimeSeries[0].ValidTime;
-
-            var forecastIndex = new int[2];
-            forecastIndex[0] = 0;
-            forecastIndex[1] = forecast.TimeSeries
-                .IndexOf(forecast.TimeSeries.FirstOrDefault(vt => vt.ValidTime.Day == validTimeNow.AddDays(1).Day
-                && vt.ValidTime.Hour == 13));
-            //array.IndexOf(parameterArray(condition))
-
-            // Make a method out of this, Generics? Interface?
+            var forecastIndex = GetTimesetIndex(forecast);
+            
+            WeatherForecast weatherForecast = new WeatherForecast();
             foreach (var index in forecastIndex)
             {
-                Weather weather = new Weather();
                 var validTime = forecast.TimeSeries[index].ValidTime;
-                var wsymb2 = Decimal.ToInt32(forecast.TimeSeries[index].Parameters
-                    .Where(p => p.Name == "Wsymb2").Select(ws => ws.Values[0]).FirstOrDefault());
+                var weatherCategory = GetWeatherCategory(forecast, index);
                 var temperature = forecast.TimeSeries[index].Parameters
                     .Where(p => p.Name == "t").Select(t => t.Values[0]).FirstOrDefault();
                 var wind = forecast.TimeSeries[index].Parameters
@@ -56,35 +45,65 @@ namespace LocalWeather.Data
                     .Where(p => p.Name == "wd").Select(wd => wd.Values[0]).FirstOrDefault();
                 var precipitationMedian = forecast.TimeSeries[index].Parameters
                     .Where(p => p.Name == "pmedian").Select(pm => pm.Values[0]).FirstOrDefault();
-                var precipitationCategory = Decimal.ToInt32(forecast.TimeSeries[index].Parameters
-                    .Where(p => p.Name == "pcat").Select(pc => pc.Values[0]).FirstOrDefault());
+                var precipitationCategory = GetPrecipitationCategory(forecast, index);
 
-                string cardinal = string.Empty;
-                if (windDegree >= 338 && windDegree <= 22) { cardinal = "N"; }
-                else if (windDegree >= 23 && windDegree <= 67) { cardinal = "NE"; }
-                else if (windDegree >= 68 && windDegree <= 112) { cardinal = "E"; }
-                else if (windDegree >= 113 && windDegree <= 157) { cardinal = "SE"; }
-                else if (windDegree >= 158 && windDegree <= 202) { cardinal = "S"; }
-                else if (windDegree >= 203 && windDegree <= 247) { cardinal = "SW"; }
-                else if (windDegree >= 248 && windDegree <= 292) { cardinal = "W"; }
-                else if (windDegree >= 293 && windDegree <= 337) { cardinal = "NW"; }
+                Weather weather = new Weather()
+                {
+                    ValidTime = validTime,
+                    WeatherCategory = weatherCategory,
+                    Temperature = temperature,
+                    Wind = wind,
+                    WindDirection = GetCardinalDirection(windDegree),
+                    PrecipitationMedian = precipitationMedian,
+                    PrecipitationCategory = precipitationCategory
+                };              
 
-                //CultureInfo en = new CultureInfo("en-US");
-                //var month = DateTime.Now.ToString("MMMM", en);
-
-                weather.ValidTime = validTime.AddHours(1);
-                weather.WeatherCategory = WeatherCategory.GetValueOrDefault(wsymb2);
-                weather.Temperature = temperature;
-                weather.Wind = wind;
-                weather.WindDirection = cardinal;
-                weather.PrecipitationMedian = precipitationMedian;
-                weather.PrecipitationCategory = PrecipitationCategory.GetValueOrDefault(precipitationCategory);
                 weatherForecast.Forecast.Add(weather);
             }
             return weatherForecast;
         }
 
-        
-        
+        private string GetCardinalDirection(int degree)
+        {
+            string cardinal = string.Empty;
+            if (degree >= 338 && degree <= 22) { cardinal = "N"; }
+            else if (degree >= 23 && degree <= 67) { cardinal = "NE"; }
+            else if (degree >= 68 && degree <= 112) { cardinal = "E"; }
+            else if (degree >= 113 && degree <= 157) { cardinal = "SE"; }
+            else if (degree >= 158 && degree <= 202) { cardinal = "S"; }
+            else if (degree >= 203 && degree <= 247) { cardinal = "SW"; }
+            else if (degree >= 248 && degree <= 292) { cardinal = "W"; }
+            else if (degree >= 293 && degree <= 337) { cardinal = "NW"; }
+            return cardinal;
+        }
+
+        private int[] GetTimesetIndex(Forecast forecast)
+        {
+            var timesetIndex = new int[2];
+            timesetIndex[0] = 0;
+            timesetIndex[1] = forecast.TimeSeries
+                .IndexOf(forecast.TimeSeries.FirstOrDefault(vt => vt.ValidTime.Day == forecast.TimeSeries[0].ValidTime.AddDays(1).Day
+                && vt.ValidTime.Hour == 13));
+            //array.IndexOf(parameterArray(condition))
+            return timesetIndex;
+        }
+
+        private string GetWeatherCategory(Forecast forecast, int index)
+        {
+            var wsymb2 = Decimal.ToInt32(forecast.TimeSeries[index].Parameters
+                    .Where(p => p.Name == "Wsymb2").Select(ws => ws.Values[0]).FirstOrDefault());
+            var weatherCategory = WeatherCategory.GetValueOrDefault(wsymb2);
+            return weatherCategory;
+        }
+
+        private string GetPrecipitationCategory(Forecast forecast, int index)
+        {
+            var pcat = Decimal.ToInt32(forecast.TimeSeries[index].Parameters
+                    .Where(p => p.Name == "pcat").Select(pc => pc.Values[0]).FirstOrDefault());
+            var precipitationCategory = PrecipitationCategory.GetValueOrDefault(pcat);
+            return precipitationCategory;
+        }
+
+
     }
 }

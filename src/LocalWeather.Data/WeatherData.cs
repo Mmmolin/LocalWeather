@@ -35,7 +35,7 @@ namespace LocalWeather.Data
             WeatherForecast weatherForecast = new WeatherForecast();
             foreach (var index in forecastIndex)
             {
-                var validTime = forecast.TimeSeries[index].ValidTime;
+                var validTime = forecast.TimeSeries[index].ValidTime.ToLocalTime();
                 var weatherCategory = GetWeatherCategory(forecast, index);
                 var temperature = forecast.TimeSeries[index].Parameters
                     .Where(p => p.Name == "t").Select(t => t.Values[0]).FirstOrDefault();
@@ -66,7 +66,8 @@ namespace LocalWeather.Data
         private string GetCardinalDirection(int degree)
         {
             string cardinal = string.Empty;
-            if (degree >= 338 && degree <= 22) { cardinal = "N"; }
+            if (degree >= 338 && degree <= 360) { cardinal = "N"; }
+            else if (degree >= 0 && degree <= 22) { cardinal = "N"; }
             else if (degree >= 23 && degree <= 67) { cardinal = "NE"; }
             else if (degree >= 68 && degree <= 112) { cardinal = "E"; }
             else if (degree >= 113 && degree <= 157) { cardinal = "SE"; }
@@ -82,7 +83,7 @@ namespace LocalWeather.Data
             var timesetIndex = new int[2];
             timesetIndex[0] = 0;
             timesetIndex[1] = forecast.TimeSeries
-                .IndexOf(forecast.TimeSeries.FirstOrDefault(vt => vt.ValidTime.Day == forecast.TimeSeries[0].ValidTime.AddDays(1).Day
+                .IndexOf(forecast.TimeSeries.FirstOrDefault(vt => vt.ValidTime.Day == forecast.TimeSeries[0].ValidTime.ToLocalTime().AddDays(1).Day
                 && vt.ValidTime.Hour == 13));
             //array.IndexOf(parameterArray(condition))
             return timesetIndex;

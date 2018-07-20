@@ -83,7 +83,7 @@ namespace LocalWeather.Data
             var timesetIndex = new int[2];
             timesetIndex[0] = 0;
             timesetIndex[1] = forecast.TimeSeries
-                .IndexOf(forecast.TimeSeries.FirstOrDefault(vt => vt.ValidTime.Day == forecast.TimeSeries[0].ValidTime.ToLocalTime().AddDays(1).Day
+                .IndexOf(forecast.TimeSeries.FirstOrDefault(vt => vt.ValidTime.ToLocalTime().Day == forecast.TimeSeries[0].ValidTime.ToLocalTime().AddDays(1).Day
                 && vt.ValidTime.Hour == 13));
             //array.IndexOf(parameterArray(condition))
             return timesetIndex;
@@ -104,7 +104,5 @@ namespace LocalWeather.Data
             var precipitationCategory = PrecipitationCategory.GetValueOrDefault(pcat);
             return precipitationCategory;
         }
-
-
     }
 }

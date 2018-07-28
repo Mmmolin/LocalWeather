@@ -14,17 +14,8 @@ namespace LocalWeather.Controllers
     public class HomeController : Controller
     {
         public IActionResult Index()
-        {
-            var weatherData = new LocalWeather.Data.WeatherData();
-            var weatherAsync = weatherData.CreateWeatherForecast();
-            var weatherForecast = new WeatherForecast();
-            weatherForecast = weatherAsync.Result;
-            return View(weatherForecast);
+        {            
+            return View();
         }        
-
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
     }
 }

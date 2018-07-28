@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LocalWeather.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +10,15 @@ namespace LocalWeather.Controllers
 {
     public class WeatherController : Controller
     {
+        public ActionResult GetWeather()
+        {
+            var weatherData = new LocalWeather.Data.WeatherData();
+            var weatherAsync = weatherData.CreateWeatherForecast();
+            var weatherForecast = new WeatherForecast();
+            weatherForecast = weatherAsync.Result;
+            return View(weatherForecast);
+        }
+
         // GET: Weather
         public ActionResult Index()
         {

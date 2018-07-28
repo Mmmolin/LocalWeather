@@ -1,0 +1,31 @@
+﻿@model LocalWeather.Domain.WeatherForecast
+@{
+    foreach (var forecast in Model.Forecast)
+    {
+        var day = String.Empty;
+        if (forecast.ValidTime.ToLocalTime().ToShortDateString() == DateTime.Now.ToShortDateString())
+        {
+            day = "Today";
+        }
+        else if (forecast.ValidTime.ToLocalTime().ToShortDateString() == DateTime.Now.AddDays(1).ToShortDateString())
+        {
+            day = "Tomorrow";
+        }
+
+        <table class="weatherData">
+            <tr class="category">
+                <td rowspan="2">@day</td>
+                <td>Forecast</td>
+                <td>Temperature</td>
+                <td>Wind</td>
+                <td>Direction</td>
+            </tr>
+            <tr class="data">
+                <td>@forecast.WeatherCategory</td>
+                <td>@forecast.Temperature °C</td>
+                <td>@forecast.Wind m/s</td>
+                <td>@forecast.WindDirection</td>
+            </tr>
+        </table>
+    }
+}

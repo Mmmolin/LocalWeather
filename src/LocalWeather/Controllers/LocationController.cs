@@ -9,6 +9,26 @@ namespace LocalWeather.Controllers
 {
     public class LocationController : Controller
     {
+        public ActionResult SearchLocation()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult GetLocation(string test)
+        {
+            return View();
+        }
+
+        public ActionResult SetLocation()
+        {
+            return View();
+        }
+        
+
+
+
+
         // GET: Location
         public ActionResult Index()
         {

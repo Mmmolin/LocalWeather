@@ -15,8 +15,12 @@ namespace LocalWeather.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetLocation(string test)
+        public async Task<ActionResult> GetLocation(string textBoxSearch)
         {
+            //var locationData = new LocalWeather.Data.NominatimClient();
+            //var locationAsync = await locationData.GetCoordinatesAsync(textBoxSearch);
+            var locationData = new LocalWeather.Data.LocationData();
+            var locationAsync = await locationData.ListLocation(textBoxSearch);
             return View();
         }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LocalWeather.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,16 +17,14 @@ namespace LocalWeather.Controllers
 
         [HttpPost]
         public async Task<ActionResult> GetLocation(string textBoxSearch)
-        {
-            //var locationData = new LocalWeather.Data.NominatimClient();
-            //var locationAsync = await locationData.GetCoordinatesAsync(textBoxSearch);
+        {            
             var locationData = new LocalWeather.Data.LocationData();
-            var locationAsync = await locationData.ListLocation(textBoxSearch);
-            return View();
+            var locations = await locationData.ListLocation(textBoxSearch);                 
+            return View(locations);
         }
 
         public ActionResult SetLocation()
-        {
+        {            
             return View();
         }
         

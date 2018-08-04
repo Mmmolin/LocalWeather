@@ -1,0 +1,18 @@
+﻿@model List<LocalWeather.Domain.Location>
+@{
+    var test = Model;
+}
+
+<h2>GetLocation</h2>
+    @{ foreach (var location in Model)
+    {
+        <table class="weatherData">
+            <tr>
+                <td><a href="@Url.Action("GetWeather", "Weather", new { Lat = location.Lat, lon = location.Lon})">@location.Display_Name</a></td>
+            </tr>
+        </table>
+    }
+    }
+
+
+

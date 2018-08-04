@@ -10,12 +10,12 @@ namespace LocalWeather.Controllers
 {
     public class WeatherController : Controller
     {
-        public ActionResult GetWeather()
+        public ActionResult GetWeather(decimal lat, decimal lon)
         {
             var weatherData = new LocalWeather.Data.WeatherData();
-            var weatherAsync = weatherData.CreateWeatherForecast();
+            var weatherAsync = weatherData.CreateWeatherForecast(lat, lon);
             var weatherForecast = new WeatherForecast();
-            weatherForecast = weatherAsync.Result;
+            weatherForecast = weatherAsync.Result; // Can you do without this?
             return View(weatherForecast);
         }
 

@@ -25,10 +25,14 @@ namespace LocalWeather.Data
             {0, "No precipitation"},{1, "Snow" },{2, "Snow and rain" },{3, "Rain" },{4, "Drizzle" },{5, "Freezing rain" },{6, "Freezing drizzle" }
         };
 
-        public async Task<WeatherForecast> CreateWeatherForecast()
+        public async Task<WeatherForecast> CreateWeatherForecast(decimal lat, decimal lon)
         {
+            //--- This has to be handled better            
+            var latitude = Math.Round(lat, 3).ToString().Replace(",", ".");
+            var longitude = Math.Round(lon, 4).ToString().Replace(",", ".");
+            //---
             SmhiClient client = new SmhiClient();            
-            var response = await client.GetForecastAsync();
+            var response = await client.GetForecastAsync(latitude, longitude);            
             var forecast = response;
             var forecastIndex = GetTimesetIndex(forecast);
             

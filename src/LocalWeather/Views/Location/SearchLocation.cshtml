@@ -3,10 +3,19 @@
     ViewData["Title"] = "SearchLocation";
 }
 
-<h2>SearchLocation</h2>
 @using (Html.BeginForm("GetLocation", "Location", FormMethod.Post))
 {
-    @Html.TextBox("textBoxSearch");
+@*<div class="centerText">
+    @Html.TextBox("textBoxSearch")
     <input type="submit" value="Search" />
+</div>*@
+    <table class="centerTable centerData">
+        <tr>
+            <td id="searchHead">Search for location:</td>
+        </tr>
+        <tr>
+            <td>@Html.TextBox("textBoxSearch")
+            <input type="submit" value="Search" /></td>
+        </tr>
+    </table>
 }
-

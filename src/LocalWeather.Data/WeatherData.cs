@@ -27,7 +27,7 @@ namespace LocalWeather.Data
 
         public async Task<WeatherForecast> CreateWeatherForecast(decimal lat, decimal lon)
         {
-            //--- This has to be handled better            
+            //--- This has to be handled better, maybe a method            
             var latitude = Math.Round(lat, 3).ToString().Replace(",", ".");
             var longitude = Math.Round(lon, 4).ToString().Replace(",", ".");
             //---

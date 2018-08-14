@@ -1,7 +1,7 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
-    background-color: honeydew;
+    background-color: lightskyblue;
 }
 
 /* Wrapping element */
@@ -51,6 +51,7 @@
 
 .centerData {
     text-align: center;
+    font-family: 'MerriWeather', serif;
 }
 
 .category {
@@ -65,6 +66,14 @@
 .date {
     font-weight:normal;
     font-style:italic;
+}
+
+#headerLogo {    
+    font-size: 70px;    
+}
+
+#searchBar {
+    border-radius: 25px;
 }
 
 

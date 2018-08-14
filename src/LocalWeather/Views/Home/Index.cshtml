@@ -1,12 +1,23 @@
 ﻿@model LocalWeather.Domain.WeatherForecast
-@{    
+@{
 
 }
+@using (Html.BeginForm("GetLocation", "Location", FormMethod.Post ))
+{
 <table class="centerTable centerData">
     <tr>
-        <td><a href="@Url.Action("SearchLocation", "Location")"><h1>Local Weather</h1></a></td>
+        <td><h1 id="headerLogo">Local Weather</h1></td>
+    </tr>
+    <tr>
+        <td>
+            @Html.TextBox("textBoxSearch")
+            <button type="submit"><i class="fas fa-search"></i></button>            
+        </td>
     </tr>
 </table>
+}
+
+
 
 
 

@@ -3,11 +3,15 @@
     foreach (var forecast in Model.Forecast)
     {
         var day = String.Empty;
-        if (forecast.ValidTime.ToLocalTime().ToShortDateString() == DateTime.Now.ToShortDateString())
+        if (forecast.ValidTime.ToLocalTime().ToShortDateString() == DateTime.Today.ToShortDateString())
         {
             day = "Today";
         }
-        else if (forecast.ValidTime.ToLocalTime().ToShortDateString() == DateTime.Now.AddDays(1).ToShortDateString())
+        else if(forecast.ValidTime.ToLocalTime().Hour == 0)
+        {
+            day = "Today";
+        }
+        else if (forecast.ValidTime.ToLocalTime().ToShortDateString() == DateTime.Today.AddDays(1).ToShortDateString())
         {
             day = "Tomorrow";
         }

@@ -18,6 +18,9 @@ namespace LocalWeather.Data
             HttpResponseMessage response = await client.GetAsync(searchAddress);
             var content = await response.Content.ReadAsStringAsync();
             List<Location> locations = JsonConvert.DeserializeObject<List<Location>>(content);
+            locations.RemoveAll(l => l.Type != "city" && 
+                                l.Type != "village" &&
+                                l.Type != "town");
             return locations;
         }
     }

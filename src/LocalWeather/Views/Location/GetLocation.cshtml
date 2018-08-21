@@ -2,11 +2,10 @@
 @{
     var test = Model;
 }
-
-<h2>GetLocation</h2>
+<h2 class="centerData">Choose Location:</h2>
     @{ foreach (var location in Model)
     {
-        <table class="centerTable displayData">
+        <table class="centerTable displayData">            
             <tr>
                 <td><a href="@Url.Action("GetWeather", "Weather", new { Lat = location.Lat, lon = location.Lon})">@location.Display_Name</a></td>
             </tr>

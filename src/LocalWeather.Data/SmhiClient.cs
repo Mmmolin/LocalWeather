@@ -13,7 +13,7 @@ namespace LocalWeather.Data
             HttpResponseMessage response = await client.GetAsync("https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/" + lon + "/lat/" + lat + "/data.json");
             string content = await response.Content.ReadAsStringAsync();
             Forecast forecast = JsonConvert.DeserializeObject<Forecast>(content);
-            return (forecast);
+            return forecast;
         }
     }
 }

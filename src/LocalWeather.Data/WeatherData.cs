@@ -82,14 +82,13 @@ namespace LocalWeather.Data
             return cardinal;
         }
 
-        private int[] GetTimesetIndex(Forecast forecast)
-        {
+        private int[] GetTimesetIndex(Forecast forecast) //Refactor this method
+        {            
             var timesetIndex = new int[2];
             timesetIndex[0] = 0;
-            timesetIndex[1] = forecast.TimeSeries
-                .IndexOf(forecast.TimeSeries.FirstOrDefault(vt => vt.ValidTime.ToLocalTime().Day == forecast.TimeSeries[0].ValidTime.ToLocalTime().AddDays(1).Day
-                && vt.ValidTime.Hour == 13));
-            //array.IndexOf(parameterArray(condition))
+            timesetIndex[1] = forecast.TimeSeries.IndexOf(forecast.TimeSeries
+                .FirstOrDefault(t => t.ValidTime.Date.ToLocalTime().Date == DateTime.Today.AddDays(1).Date &&
+                t.ValidTime.Hour == 12));            
             return timesetIndex;
         }
 

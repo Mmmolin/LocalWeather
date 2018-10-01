@@ -1,15 +1,14 @@
-﻿using LocalWeather.Domain;
+﻿using LocalWeather.Data;
+using LocalWeather.Domain;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LocalWeather.Data
 {
     public class WeatherData
-    {       
+    {
         static Dictionary<int, string> WeatherCategory = new Dictionary<int, string>()
         {
             {1, "Clear sky" },{2, "Nearly clear sky" },{3, "Variable cloudiness" },{4, "Halfclear sky" },{5, "Cloudy sky" },
@@ -25,17 +24,16 @@ namespace LocalWeather.Data
             {0, "No precipitation"},{1, "Snow" },{2, "Snow and rain" },{3, "Rain" },{4, "Drizzle" },{5, "Freezing rain" },{6, "Freezing drizzle" }
         };
 
-        public async Task<WeatherForecast> CreateWeatherForecast(decimal lat, decimal lon)
+        public async Task<WeatherForecast> CreateWeatherForecast(SmhiClient client, decimal lat, decimal lon)
         {
             //--- This has to be handled better, maybe a method            
             var latitude = Math.Round(lat, 3).ToString().Replace(",", ".");
             var longitude = Math.Round(lon, 4).ToString().Replace(",", ".");
             //---
-            SmhiClient client = new SmhiClient();            
-            var response = await client.GetForecastAsync(latitude, longitude);            
+            var response = await client.GetForecastAsync(latitude, longitude);
             var forecast = response;
             var forecastIndex = GetTimesetIndex(forecast);
-            
+
             WeatherForecast weatherForecast = new WeatherForecast();
             foreach (var index in forecastIndex)
             {
@@ -60,7 +58,7 @@ namespace LocalWeather.Data
                     WindDirection = GetCardinalDirection(windDegree),
                     PrecipitationMedian = precipitationMedian,
                     PrecipitationCategory = precipitationCategory
-                };              
+                };
 
                 weatherForecast.Forecast.Add(weather);
             }
@@ -83,12 +81,12 @@ namespace LocalWeather.Data
         }
 
         private int[] GetTimesetIndex(Forecast forecast) //Refactor this method
-        {            
+        {
             var timesetIndex = new int[2];
             timesetIndex[0] = 0;
             timesetIndex[1] = forecast.TimeSeries.IndexOf(forecast.TimeSeries
                 .FirstOrDefault(t => t.ValidTime.Date.ToLocalTime().Date == DateTime.Today.AddDays(1).Date &&
-                t.ValidTime.Hour == 12));            
+                t.ValidTime.Hour == 12));
             return timesetIndex;
         }
 

@@ -11,11 +11,11 @@ namespace LocalWeather.Controllers
     public class LocationController : Controller
     {
         [HttpPost]
-        public async Task<ActionResult> GetLocation(string textBoxSearch)
-        {            
+        public async Task<JsonResult> GetLocation(string textBoxSearch)
+        {
             var locationData = new LocalWeather.Data.LocationData();
-            var locations = await locationData.ListLocation(textBoxSearch);                 
-            return View(locations);
-        }        
+            var locations = await locationData.ListLocation(textBoxSearch);
+            return Json(locations);
+        }
     }
 }

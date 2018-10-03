@@ -26,28 +26,23 @@ namespace LocalWeather.Data
 
         public async Task<WeatherForecast> CreateWeatherForecast(SmhiClient client, decimal lat, decimal lon)
         {
-            //--- This has to be handled better, maybe a method            
+            //--- This has to be handled better, maybe a method
             var latitude = Math.Round(lat, 3).ToString().Replace(",", ".");
             var longitude = Math.Round(lon, 4).ToString().Replace(",", ".");
             //---
             var response = await client.GetForecastAsync(latitude, longitude);
             var forecast = response;
-            var forecastIndex = GetTimesetIndex(forecast);
 
             WeatherForecast weatherForecast = new WeatherForecast();
-            foreach (var index in forecastIndex)
+            foreach (var index in forecast.TimeSeries)
             {
-                var validTime = forecast.TimeSeries[index].ValidTime.ToLocalTime();
-                var weatherCategory = GetWeatherCategory(forecast, index);
-                var temperature = forecast.TimeSeries[index].Parameters
-                    .Where(p => p.Name == "t").Select(t => t.Values[0]).FirstOrDefault();
-                var wind = forecast.TimeSeries[index].Parameters
-                    .Where(p => p.Name == "ws").Select(ws => ws.Values[0]).FirstOrDefault();
-                var windDegree = (int)forecast.TimeSeries[index].Parameters
-                    .Where(p => p.Name == "wd").Select(wd => wd.Values[0]).FirstOrDefault();
-                var precipitationMedian = forecast.TimeSeries[index].Parameters
-                    .Where(p => p.Name == "pmedian").Select(pm => pm.Values[0]).FirstOrDefault();
-                var precipitationCategory = GetPrecipitationCategory(forecast, index);
+                var validTime = index.ValidTime.ToLocalTime();
+                var weatherCategory = GetWeatherCategory(index);
+                var temperature = GetTemperature(index);
+                var wind = GetWind(index);
+                var windDegree = GetWindDegree(index);
+                var precipitationMedian = GetPrecipitationMedian(index);
+                var precipitationCategory = GetPrecipitationCategory(index);
 
                 Weather weather = new Weather()
                 {
@@ -64,8 +59,35 @@ namespace LocalWeather.Data
             }
             return weatherForecast;
         }
+        private decimal GetTemperature(TimeSerie index)
+        {
+            var temperature = index.Parameters.Where(p => p.Name == "t")
+                .Select(t => t.Values[0]).FirstOrDefault();
+            return temperature;
+        }
 
-        private string GetCardinalDirection(int degree)
+        private decimal GetWind(TimeSerie index)
+        {
+            var wind = index.Parameters.Where(p => p.Name == "ws")
+                .Select(ws => ws.Values[0]).FirstOrDefault();
+            return wind;
+        }
+
+        private int GetWindDegree(TimeSerie index)
+        {
+            var windDegree = (int)index.Parameters.Where(p => p.Name == "wd")
+                .Select(wd => wd.Values[0]).FirstOrDefault();
+            return windDegree;
+        }
+
+        private decimal GetPrecipitationMedian(TimeSerie index)
+        {
+            var precipitationMedian = index.Parameters.Where(p => p.Name == "pmedian")
+                .Select(pm => pm.Values[0]).FirstOrDefault();
+            return precipitationMedian;
+        }
+
+    private string GetCardinalDirection(int degree)
         {
             string cardinal = string.Empty;
             if (degree >= 338 && degree <= 360) { cardinal = "N"; }
@@ -80,28 +102,18 @@ namespace LocalWeather.Data
             return cardinal;
         }
 
-        private int[] GetTimesetIndex(Forecast forecast) //Refactor this method
+        private string GetWeatherCategory(TimeSerie index)
         {
-            var timesetIndex = new int[2];
-            timesetIndex[0] = 0;
-            timesetIndex[1] = forecast.TimeSeries.IndexOf(forecast.TimeSeries
-                .FirstOrDefault(t => t.ValidTime.Date.ToLocalTime().Date == DateTime.Today.AddDays(1).Date &&
-                t.ValidTime.Hour == 12));
-            return timesetIndex;
-        }
-
-        private string GetWeatherCategory(Forecast forecast, int index)
-        {
-            var wsymb2 = Decimal.ToInt32(forecast.TimeSeries[index].Parameters
+            var wsymb2 = Decimal.ToInt32(index.Parameters
                     .Where(p => p.Name == "Wsymb2").Select(ws => ws.Values[0]).FirstOrDefault());
             var weatherCategory = WeatherCategory.GetValueOrDefault(wsymb2);
             return weatherCategory;
         }
 
-        private string GetPrecipitationCategory(Forecast forecast, int index)
+        private string GetPrecipitationCategory(TimeSerie index)
         {
-            var pcat = Decimal.ToInt32(forecast.TimeSeries[index].Parameters
-                    .Where(p => p.Name == "pcat").Select(pc => pc.Values[0]).FirstOrDefault());
+            var pcat = (int)index.Parameters
+                    .Where(p => p.Name == "pcat").Select(pc => pc.Values[0]).FirstOrDefault();
             var precipitationCategory = PrecipitationCategory.GetValueOrDefault(pcat);
             return precipitationCategory;
         }

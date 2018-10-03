@@ -2,21 +2,21 @@
 @{
 
 }
-@using (Html.BeginForm("GetLocation", "Location", FormMethod.Post ))
-{
-<table class="centerTable centerData">
-    <tr>
-        <td><h1 id="headerLogo">Local Weather</h1></td>
-    </tr>
-    <tr>
-        <td>
-            @Html.TextBox("textBoxSearch")
-            <button type="submit"><i class="fas fa-search"></i></button>            
-        </td>
-    </tr>
-</table>
-}
 
+<main id="start-page">
+    <div id="left-side">
+    </div>
+    <div id="right-side">
+        <h1 id="name-header">Local weather</h1>
+        @using (Html.BeginForm("GetLocation", "Location", FormMethod.Post))
+        {
+            <input id="text-input" type="text" name="textBoxSearch"/>
+        }
+        <footer>
+            <p>Created by <a href="https://github.com/Mmmolin">Martin Molin</a></p>
+        </footer>
+    </div>
+</main>
 
 
 

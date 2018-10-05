@@ -7,14 +7,13 @@
     <div id="left-side">
     </div>
     <div id="right-side">
-        <h1 id="name-header">Local weather</h1>
-        @using (Html.BeginForm("GetLocation", "Location", FormMethod.Post))
-        {
-            <input id="text-input" type="text" name="textBoxSearch"/>
-        }
-        <footer>
-            <p>Created by <a href="https://github.com/Mmmolin">Martin Molin</a></p>
-        </footer>
+        <div id="search-container">
+            <h1 id="name-header">Local weather</h1>
+            <input id="text-input" type="text" name="textBoxSearch" />
+            <footer>
+                <p>Created by <a href="https://github.com/Mmmolin">Martin Molin</a></p>
+            </footer>
+        </div>
     </div>
 </main>
 

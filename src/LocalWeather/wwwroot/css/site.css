@@ -1,8 +1,4 @@
-﻿* {
-    border: 0.01em solid red;
-}
-
-html, body {
+﻿html, body {
     height: 100%;
     font-family: "Cuprum", sans-serif;
 }
@@ -61,9 +57,17 @@ footer {
 
 /* Locations CSS styles*/
 
-#locations-container {
+#location-container {
     display: flex;
     flex-direction: column;
     width: 65%;
+    margin: auto;
+}
+
+#forecast-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    width: 80%;
     margin: auto;
 }

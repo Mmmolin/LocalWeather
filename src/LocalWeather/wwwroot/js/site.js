@@ -218,9 +218,10 @@ function createLocationLabel(location) {
     let label = document.createElement('label');
     label.textContent = location.display_Name;
     label.style.flex = "1";
-    label.style.height = "2em";
+    label.style.lineHeight = "3em";
     label.style.backgroundColor = "white";
     label.style.border = "0.01em solid black";
+    label.style.textAlign = "center";
     label.addEventListener('click', function () {
         getForecast(location);
     })

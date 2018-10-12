@@ -69,7 +69,7 @@ function createForecastContainer(result, location) {
     let container = createContainerElement("forecast");
     let header = createHeaderTwoElement(location.display_Name);
     header.style.fontSize = "2em";
-    header.style.marginBottom = "1.5em";
+    header.style.marginBottom = "1em";
     outerContainer.appendChild(header);
     indexes.forEach(function (index) {
         let label = createForecastItem(result, index);
@@ -84,7 +84,13 @@ function createForecastItem(result, index) {
     forecastItem.className = "forecastItem";
 
     let dateLabel = document.createElement('label');
-    dateLabel.textContent = date.weekday + " " + date.day + " " + date.month;
+    if (date.hasOwnProperty('weekday')) {
+        dateLabel.textContent = date.weekday + " ";
+    }
+    dateLabel.textContent += date.day;
+    if (date.hasOwnProperty('month')) {
+        dateLabel.TextContent += " " + date.month;
+    }
     dateLabel.style.gridColumn = "1/3";
     dateLabel.style.textAlign = "center";
     dateLabel.style.paddingLeft = "0.2em";
@@ -119,12 +125,26 @@ function createForecastItem(result, index) {
 function dateBuilder(jsonDate) {
     const weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
+    const nowDate = new Date();
+    let nextDate = new Date();
+    nextDate.setDate(nextDate.getDate() + 1);
+
     let convertedDate = new Date(jsonDate);
     let date = {
         day: convertedDate.getDate(),
         weekday: weekday[convertedDate.getDay()],
         month: month[convertedDate.getMonth()]
     };
+    if (date.day == nowDate.getDate()) {
+        date.day = "Today";
+        delete date.weekday;
+        delete date.month;
+    }
+    else if (date.day == nextDate.getDate()) {
+        date.day = "Tomorrow";
+        delete date.weekday;
+        delete date.month;
+    }
     return date;
 }
 

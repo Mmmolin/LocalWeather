@@ -153,11 +153,55 @@ function createDetailedForecastContainer(result, index) {
     let outerContainer = document.querySelector('#left-side');
     let container = createContainerElement("forecast");
     indexes.forEach(function (index) {
-        let label = createForecastItem(result, index);
+        let label = createDetailedForecastItem(result, index);
         container.appendChild(label);
     });
     outerContainer.appendChild(container);
 };
+
+function createDetailedForecastItem(result, index) {    /*<---- you are here!*/
+    let date = dateBuilder(result.forecast[index].validTime);
+    let forecastItem = document.createElement('div');
+    forecastItem.className = "forecastItem";
+
+    let dateLabel = document.createElement('label');
+    if (date.hasOwnProperty('weekday')) {
+        dateLabel.textContent = date.weekday + " ";
+    }
+    dateLabel.textContent += date.day;
+    if (date.hasOwnProperty('month')) {
+        dateLabel.TextContent += " " + date.month;
+    }
+    dateLabel.style.gridColumn = "1/3";
+    dateLabel.style.textAlign = "center";
+    dateLabel.style.paddingLeft = "0.2em";
+    dateLabel.style.paddingRight = "0.2em";
+    dateLabel.style.margin = "0em";
+
+    let weatherSymbol = document.createElement('img');
+    weatherSymbol.src = "/images/dummyicon.png";
+    weatherSymbol.style.width = "100%";
+
+    let temperature = document.createElement('label');
+    temperature.textContent = result.forecast[index].temperature + " °C";
+    temperature.style.fontSize = "2em";
+
+    let precipitation = document.createElement('label');
+    precipitation.textContent = "Precipitation: " + result.forecast[index].precipitationMedian + "mm";
+    precipitation.style.gridColumn = "1/3";
+    precipitation.style.textAlign = "center";
+
+    forecastItem.appendChild(dateLabel);
+    forecastItem.appendChild(weatherSymbol);
+    forecastItem.appendChild(temperature);
+    forecastItem.appendChild(precipitation);
+    forecastItem.addEventListener("click", function () {
+        clearContainer("left-side");
+        createDetailedForecastContainer(result, index);
+    });
+
+    return forecastItem;
+}
 
 function findDetailedForecastIndexes(forecast, index) {
     let indexes = [];

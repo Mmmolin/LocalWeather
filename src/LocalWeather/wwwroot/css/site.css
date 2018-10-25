@@ -92,3 +92,9 @@ footer {
 .forecastItem:hover {
     transform: scale(1.05);
 }
+
+#detailed-forecast-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-auto-rows: auto;
+}

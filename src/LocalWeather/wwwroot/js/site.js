@@ -41,7 +41,7 @@ async function getForecast(location) {
 
 function createSearchContainer() {
     let outerContainer = document.querySelector('#right-side');
-    let container = createContainerElement(search);
+    let container = createContainerElement("search-container");
     let header = createHeaderOneElement();
     let input = createInputElement();
     let footer = createFooterElement();
@@ -53,7 +53,7 @@ function createSearchContainer() {
 
 function createLocationContainer(locations) {
     let outerContainer = document.querySelector('#right-side');
-    let container = createContainerElement("location");
+    let container = createContainerElement("location-container");
     let header = createHeaderTwoElement("Locations");
     container.appendChild(header);
     locations.forEach(function (location) {
@@ -66,7 +66,7 @@ function createLocationContainer(locations) {
 function createForecastContainer(result, location) {
     let indexes = findForecastIndexes(result);
     let outerContainer = document.querySelector('#right-side');
-    let container = createContainerElement("forecast");
+    let container = createContainerElement("forecast-container");
     let header = createHeaderTwoElement(location.display_Name);
     header.style.fontSize = "2em";
     header.style.marginBottom = "1em";
@@ -151,7 +151,7 @@ function dateBuilder(jsonDate) {
 function createDetailedForecastContainer(result, index) {
     let indexes = findDetailedForecastIndexes(result.forecast, index);
     let outerContainer = document.querySelector('#left-side');
-    let container = createContainerElement("forecast");
+    let container = createContainerElement("detailed-forecast-container");
     indexes.forEach(function (index) {
         let label = createDetailedForecastItem(result, index);
         container.appendChild(label);
@@ -219,7 +219,7 @@ function findDetailedForecastIndexes(forecast, index) {
 
 function createContainerElement(id) {
     let element = document.createElement('div');
-    element.id = id + "-container";
+    element.id = id;
     return element;
 }
 
@@ -288,12 +288,12 @@ function findForecastIndexes(result) {
     result.forecast.forEach(function (time) {
         let nowDate = new Date();
         let forecastDate = new Date(time.validTime);
-        if (forecastDate.getHours() == 14 && forecastDate.getDate() != nowDate.getDate()) {
+        if (forecastDate.getHours() == 13 && forecastDate.getDate() != nowDate.getDate()) {
             indexes.push(result.forecast.indexOf(time));
         }
     });
     if (indexes.length < 10) {
-        indexes.push(result[indexes.length - 1]);
+        indexes.push(result.forecast.length - 1);
     }
     return indexes;
 };

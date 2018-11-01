@@ -23,7 +23,7 @@ async function GetLocation(input) {
         });
         let result = await respond.json();
         if (result != 0) {
-            clearContainer("right-side");
+            clearRightContainer();
             createLocationContainer(result);
         }
 }
@@ -32,7 +32,7 @@ async function getForecast(location) {
     let respond = await fetch("/Weather/GetForecast?lat=" + location.lat + "&lon=" + location.lon);
     let result = await respond.json();
     if (result != 0) {
-        clearContainer("right-side");
+        clearRightContainer();
         createForecastContainer(result, location);
     }
     };
@@ -115,7 +115,7 @@ function createForecastItem(result, index) {
     forecastItem.appendChild(temperature);
     forecastItem.appendChild(precipitation);
     forecastItem.addEventListener("click", function () {
-        clearContainer("left-side");
+        clearLeftContainer();
         createDetailedForecastContainer(result, index);
     });
 
@@ -152,6 +152,8 @@ function createDetailedForecastContainer(result, index) {
     let indexes = findDetailedForecastIndexes(result.forecast, index);
     let outerContainer = document.querySelector('#left-side');
     let container = createContainerElement("detailed-forecast-container");
+    let detailedTopBar = createDetailedTopBar();
+    outerContainer.appendChild(detailedTopBar);
     indexes.forEach(function (index) {
         let label = createDetailedForecastItem(result, index);
         container.appendChild(label);
@@ -159,48 +161,46 @@ function createDetailedForecastContainer(result, index) {
     outerContainer.appendChild(container);
 };
 
-function createDetailedForecastItem(result, index) {    /*<---- you are here!*/
-    let date = dateBuilder(result.forecast[index].validTime);
-    let forecastItem = document.createElement('div');
-    forecastItem.className = "forecastItem";
+//Refactor, we are doing this twice. Also in createForecastItem!
+function createDetailedForecastItem(result, index) {
+    let detailedForecastItem = document.createElement('div');
+    detailedForecastItem.className = "detailedForecastItem";
 
-    let dateLabel = document.createElement('label');
-    if (date.hasOwnProperty('weekday')) {
-        dateLabel.textContent = date.weekday + " ";
-    }
-    dateLabel.textContent += date.day;
-    if (date.hasOwnProperty('month')) {
-        dateLabel.TextContent += " " + date.month;
-    }
-    dateLabel.style.gridColumn = "1/3";
-    dateLabel.style.textAlign = "center";
-    dateLabel.style.paddingLeft = "0.2em";
-    dateLabel.style.paddingRight = "0.2em";
-    dateLabel.style.margin = "0em";
+    let timeData = document.createElement('label');
+    timeData.textContent = new Date(result.forecast[index].validTime).getHours() + "h";
+    detailedForecastItem.appendChild(timeData);
 
-    let weatherSymbol = document.createElement('img');
-    weatherSymbol.src = "/images/dummyicon.png";
-    weatherSymbol.style.width = "100%";
+    let weatherSymbolData = document.createElement('img');
+    weatherSymbolData.src = "/Images/dummyicon.png";
+    weatherSymbolData.style.width = "100%";
+    detailedForecastItem.appendChild(weatherSymbolData);
 
-    let temperature = document.createElement('label');
-    temperature.textContent = result.forecast[index].temperature + " °C";
-    temperature.style.fontSize = "2em";
+    let temperatureData = document.createElement('label');
+    temperatureData.textContent = result.forecast[index].temperature + " °C";
+    detailedForecastItem.appendChild(temperatureData);
 
-    let precipitation = document.createElement('label');
-    precipitation.textContent = "Precipitation: " + result.forecast[index].precipitationMedian + "mm";
-    precipitation.style.gridColumn = "1/3";
-    precipitation.style.textAlign = "center";
+    let precipitationData = document.createElement('label');
+    precipitationData.textContent = result.forecast[index].precipitationMedian + "mm";
+    detailedForecastItem.appendChild(precipitationData);
 
-    forecastItem.appendChild(dateLabel);
-    forecastItem.appendChild(weatherSymbol);
-    forecastItem.appendChild(temperature);
-    forecastItem.appendChild(precipitation);
-    forecastItem.addEventListener("click", function () {
-        clearContainer("left-side");
-        createDetailedForecastContainer(result, index);
+    let windData = document.createElement('label');
+    windData.textContent = result.forecast[index].wind +
+        "m/s  " + result.forecast[index].windDirection;
+    detailedForecastItem.appendChild(windData);
+    return detailedForecastItem;
+}
+
+function createDetailedTopBar() {
+    let detailedTopBar = document.createElement('div');
+    detailedTopBar.id = "detailedTopBar";
+    let categories = ["Time", "Weather", "Temp", "Precipitation", "Wind"];
+    categories.forEach(function (category) {
+        let categoryLabel = document.createElement('label');
+        categoryLabel.textContent = category;
+        categoryLabel.style.lineHeight = "30px";
+        detailedTopBar.appendChild(categoryLabel);
     });
-
-    return forecastItem;
+    return detailedTopBar;
 }
 
 function findDetailedForecastIndexes(forecast, index) {
@@ -272,14 +272,32 @@ function createLocationLabel(location) {
     return label;
 }
 
+//function createLabel(weatherData) {
+//    let label = document.createElement('label');
+//    label.Text = weatherData;
+//    return label;
+//}
+
 /* Various functions */
 
-function clearContainer(divId) {
-    let container = document.querySelector('#' + divId + ' :first-child');
+//Refactor this START
+function clearRightContainer() {
+    let container = document.querySelector('#right-side :first-child');
     if (container != null) {
         container.remove();
     };
 }
+
+function clearLeftContainer() {
+    let detailedTopBar = document.querySelector('#detailedTopBar');
+    let container = document.querySelector('#detailed-forecast-container');
+    if (container != null) {
+        detailedTopBar.remove();
+        container.remove();
+    };
+}
+
+// END, should be one function!
 
 /* This is awful, but it works. REFACTOR! regex? */
 function findForecastIndexes(result) {

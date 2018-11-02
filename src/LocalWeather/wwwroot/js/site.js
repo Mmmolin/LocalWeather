@@ -1,9 +1,17 @@
 ﻿// Write your JavaScript code.
 loadAllEvents();
+loadBackground();
 
 function loadAllEvents() {
     inputTextKeyDownEvent();
 }
+
+function loadBackground() {
+    let backgrounds = ["skyguy.jpg", "skyfield.jpg"];
+    let index = Math.floor(Math.random() * backgrounds.length);
+    let backgroundLeft = document.querySelector('#left-side');
+    backgroundLeft.style.backgroundImage = "url(/Images/background/" + backgrounds[index] + ")";
+};
 
 /* Event Listeners */
 function inputTextKeyDownEvent() {
@@ -75,6 +83,7 @@ function createForecastContainer(result, location) {
         let label = createForecastItem(result, index);
         container.appendChild(label);
     });
+    loadBackground();
     outerContainer.appendChild(container);
 };
 
@@ -98,7 +107,7 @@ function createForecastItem(result, index) {
     dateLabel.style.margin = "0em";
 
     let weatherSymbol = document.createElement('img');
-    weatherSymbol.src = "/Images/" + result.forecast[index].weatherCategory + ".png";
+    weatherSymbol.src = "/Images/weathericons/" + result.forecast[index].weatherCategory + ".png";
     weatherSymbol.style.width = "100%";
 
     let temperature = document.createElement('label');
@@ -118,7 +127,6 @@ function createForecastItem(result, index) {
         clearLeftContainer();
         createDetailedForecastContainer(result, index);
     });
-
     return forecastItem;
 }
 
@@ -171,7 +179,7 @@ function createDetailedForecastItem(result, index) {
     detailedForecastItem.appendChild(timeData);
 
     let weatherSymbolData = document.createElement('img');
-    weatherSymbolData.src = "/Images/" + result.forecast[index].weatherCategory + ".png";
+    weatherSymbolData.src = "/Images/weathericons/" + result.forecast[index].weatherCategory + ".png";
     weatherSymbolData.style.width = "100%";
     detailedForecastItem.appendChild(weatherSymbolData);
 

@@ -1,4 +1,7 @@
-﻿// Write your JavaScript code.
+﻿//BEM: .block .block__element .block--modifier
+
+// Write your JavaScript code.
+createSearchContainer();
 loadAllEvents();
 loadBackground();
 
@@ -53,10 +56,11 @@ async function getForecast(location) {
 
 /* Create functions */
 
-function createSearchContainer() {
+function createSearchContainer() {   // <--- make this one run from the beginning!
     let outerContainer = document.querySelector('#right-side');
     let container = createIdElement("div", "search-container");
-    let header = createElement("h1", "title-header");
+    let header = createIdElement("h1", "title-header");
+    header.innerHTML = "Local Weather";
     let input = createInputElement();
     let footer = createFooterElement();
     container.appendChild(header);
@@ -89,19 +93,27 @@ function createForecastContainer(result, location) {
         let label = createForecastItem(result, index);
         container.appendChild(label);
     });
-    let returnToMain = document.createElement('label');
-    returnToMain.textContent = "BACK";
-    returnToMain.style.gridRow = "4";
-    returnToMain.style.gridColumn = "3";
-    container.appendChild(returnToMain);
+    
+    let backButton = createIdElement("label", "forecast-container__button"); 
+    backButton.textContent = "🡲";
+    backButton.addEventListener('click', function () {
+        clearLeftContainer();
+        let rightSide = document.querySelector('#right-side');
+        rightSide.innerHTML = '';
+        createSearchContainer();
+        loadAllEvents(); // <----- you are here!
+        loadBackground();
+    });
+
+    container.appendChild(backButton);
     outerContainer.appendChild(container);
 };
 
 function createForecastItem(result, index) {
     let date = dateBuilder(result.forecast[index].validTime);
-    let forecastItem = createClassElement("div", "forecastItem");
+    let forecastItem = createClassElement("div", "forecast-item");
 
-    let dateLabel = createClassElement("label", "forecastItem-datelabel")
+    let dateLabel = createClassElement("label", "forecast-item__datelabel")
     if (date.hasOwnProperty('weekday')) {
         dateLabel.textContent = date.weekday + " ";
     }
@@ -110,13 +122,13 @@ function createForecastItem(result, index) {
         dateLabel.TextContent += " " + date.month;
     }
 
-    let weatherSymbol = createClassElement("img", "forecastItem-weatherSymbol");
+    let weatherSymbol = createClassElement("img", "forecast-item__weathersymbol");
     weatherSymbol.src = "/Images/weathericons/" + result.forecast[index].weatherCategory + ".png";
 
-    let temperature = createClassElement("label", "forecastItem-temperature");
+    let temperature = createClassElement("label", "forecast-item__temperature");
     temperature.textContent = result.forecast[index].temperature + " °C";
 
-    let precipitation = createClassElement("label", "forecastItem-precipitation");
+    let precipitation = createClassElement("label", "forecast-item__precipitation");
     precipitation.textContent = "Precipitation: " + result.forecast[index].precipitationMedian + "mm";
 
     forecastItem.appendChild(dateLabel);
@@ -171,7 +183,7 @@ function createDetailedForecastContainer(result, index) {
 
 //Refactor, we are doing this twice. Also in createForecastItem!
 function createDetailedForecastItem(result, index) {
-    let detailedForecastItem = createClassElement("div", "detailedForecastItem");
+    let detailedForecastItem = createClassElement("div", "detailed-forecast-item");
     let timeData = document.createElement('label');
     timeData.textContent = new Date(result.forecast[index].validTime).getHours() + "h";
     detailedForecastItem.appendChild(timeData);
@@ -197,12 +209,11 @@ function createDetailedForecastItem(result, index) {
 }
 
 function createDetailedTopBar() {
-    let detailedTopBar = createIdElement("div", "detailedTopBar");
+    let detailedTopBar = createIdElement("div", "detailed-topbar");
     let categories = ["Time", "Weather", "Temp", "Precipitation", "Wind"];
     categories.forEach(function (category) {
-        let categoryLabel = document.createElement('label');
+        let categoryLabel = createClassElement("label", "detailed-topbar__label");
         categoryLabel.textContent = category;
-        categoryLabel.style.lineHeight = "30px";
         detailedTopBar.appendChild(categoryLabel);
     });
     return detailedTopBar;
@@ -254,13 +265,8 @@ function createFooterElement() {
 }
 
 function createLocationLabel(location) {
-    let label = document.createElement('label');
+    let label = createClassElement("label", "location-label");
     label.textContent = location.display_Name;
-    label.style.flex = "1";
-    label.style.lineHeight = "3em";
-    label.style.backgroundColor = "white";
-    label.style.border = "0.01em solid black";
-    label.style.textAlign = "center";
     label.addEventListener('click', function () {
         getForecast(location);
     })
@@ -278,7 +284,7 @@ function clearRightContainer() {
 }
 
 function clearLeftContainer() {
-    let detailedTopBar = document.querySelector('#detailedTopBar');
+    let detailedTopBar = document.querySelector('#detailed-topbar');
     let container = document.querySelector('#detailed-forecast-container');
     if (container != null) {
         detailedTopBar.remove();

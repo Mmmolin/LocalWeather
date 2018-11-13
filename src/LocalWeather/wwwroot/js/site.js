@@ -12,8 +12,8 @@ function loadAllEvents() {
 // Load random Background
 function loadBackground() {
     // Do a while loop until backgrounds are not the same
-    let imageBackgrounds = ["skyguy.jpg", "skyfield.jpg"];
-    let colorBackgrounds = ["rgba(114,160,182, 0.20)", "rgba(198,140,75, 0.40)"];
+    let imageBackgrounds = ["skyguy.jpg", "skyfield.jpg", "skyblue.jpg", "skycloud.jpg"];
+    let colorBackgrounds = ["rgba(114,160,182, 0.20)", "rgba(198,140,75, 0.40)", "rgba(89,124,168, 0.40)", "rgba(143,129,76, 0.40)"];
     let index = Math.floor(Math.random() * imageBackgrounds.length);
     let backgroundLeft = document.querySelector('#left-side');
     let backgroundRight = document.querySelector('#right-side');
@@ -79,6 +79,9 @@ function createLocationContainer(locations) {
         let label = createLocationLabel(location);
         container.appendChild(label);
     })
+    let backButton = createBackButton();
+    backButton.style.textAlign = "right";
+    container.appendChild(backButton);
     outerContainer.appendChild(container);
 }
 
@@ -93,21 +96,26 @@ function createForecastContainer(result, location) {
         let label = createForecastItem(result, index);
         container.appendChild(label);
     });
-    
-    let backButton = createIdElement("label", "forecast-container__button"); 
+
+    let backButton = createBackButton();
+
+    container.appendChild(backButton);
+    outerContainer.appendChild(container);
+};
+
+function createBackButton() {
+    let backButton = createIdElement("label", "forecast-container__button");
     backButton.textContent = "🡲";
     backButton.addEventListener('click', function () {
         clearLeftContainer();
         let rightSide = document.querySelector('#right-side');
         rightSide.innerHTML = '';
         createSearchContainer();
-        loadAllEvents(); // <----- you are here!
+        loadAllEvents(); //
         loadBackground();
     });
-
-    container.appendChild(backButton);
-    outerContainer.appendChild(container);
-};
+    return backButton;
+}
 
 function createForecastItem(result, index) {
     let date = dateBuilder(result.forecast[index].validTime);
@@ -185,6 +193,7 @@ function createDetailedForecastContainer(result, index) {
 function createDetailedForecastItem(result, index) {
     let detailedForecastItem = createClassElement("div", "detailed-forecast-item");
     let timeData = document.createElement('label');
+    timeData.style.paddingLeft = "0.5em";
     timeData.textContent = new Date(result.forecast[index].validTime).getHours() + "h";
     detailedForecastItem.appendChild(timeData);
 
@@ -249,6 +258,8 @@ function createInputElement() {
     input.id = "text-input";
     input.type = "text";
     input.name = "textBoxSearch";
+    input.placeholder = " Enter location"
+    input.spellcheck = "false";
     return input;
 }
 
